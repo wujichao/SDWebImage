@@ -308,7 +308,10 @@ NSString *const SDWebImageDownloadFinishNotification = @"SDWebImageDownloadFinis
                                 //size_t offset = (CGBitmapContextGetBytesPerRow(bmContext)*y) + (4 * x);
                                 // CGBitmapContextGetBytesPerRow = width * 4
                                 if (pixels[offset+1] == 128 && pixels[offset+2] == 128 && pixels[offset+3] == 128) {
-                                    pixels[offset] = 0;//clear alpha
+                                    //pixels[offset] = 0;//clear alpha
+                                    pixels[offset+1] = 0;
+                                    pixels[offset+2] = 0;
+                                    pixels[offset+3] = 0;
                                 }
                             }
                         }
