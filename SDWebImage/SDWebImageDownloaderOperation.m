@@ -297,6 +297,23 @@ NSString *const SDWebImageDownloadFinishNotification = @"SDWebImageDownloadFinis
                 if (bmContext) {
                     CGContextDrawImage(bmContext, (CGRect){.origin.x = 0.0f, .origin.y = 0.0f, .size.width = width, .size.height = partialHeight}, partialImageRef);
                     CGImageRelease(partialImageRef);
+                    
+                    if (self.options & SDWebImageDownloaderProgressiveDownloadClearGreyColor) {
+                        unsigned char *pixels = CGBitmapContextGetData(bmContext);
+                        for(size_t y = 0; y < height; y++)
+                        {
+                            for(size_t x = 0; x <width; x++)
+                            {
+                                size_t offset = 4*((width * y) + x);
+                                //size_t offset = (CGBitmapContextGetBytesPerRow(bmContext)*y) + (4 * x);
+                                // CGBitmapContextGetBytesPerRow = width * 4
+                                if (pixels[offset+1] == 128 && pixels[offset+2] == 128 && pixels[offset+3] == 128) {
+                                    pixels[offset] = 0;//clear alpha
+                                }
+                            }
+                        }
+                    }
+                    
                     partialImageRef = CGBitmapContextCreateImage(bmContext);
                     CGContextRelease(bmContext);
                 }
